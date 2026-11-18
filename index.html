@@ -32,7 +32,7 @@ p{margin:0;font-size:14px;opacity:.85}
 .pad button:active,.pad button.on{transform:translateY(3px);box-shadow:0 1px 0 #f2c230;background:#1d2c58}
 .pad small{display:block;font:600 11px Inter,sans-serif;opacity:.8;margin-top:4px}
 .dir{display:grid;grid-template-columns:repeat(3,auto);gap:8px}
-.dir .up{grid-column:2}.dir .lf{grid-column:1;grid-row:2}.dir .dn{grid-column:2;grid-row:2}.dir .rt{grid-column:3;grid-row:2}
+.dir .ul{grid-column:1;grid-row:1}.dir .up{grid-column:2;grid-row:1}.dir .ur{grid-column:3;grid-row:1}.dir .lf{grid-column:1;grid-row:2}.dir .dn{grid-column:2;grid-row:2}.dir .rt{grid-column:3;grid-row:2}
 .act{display:flex;gap:12px}
 .act button{border-radius:50%;background:#c8302c;box-shadow:0 4px 0 #7a1c19}.act button.k{background:#1f4fa0;box-shadow:0 4px 0 #12306a}
 .stage{position:relative}
@@ -41,6 +41,9 @@ p{margin:0;font-size:14px;opacity:.85}
 .ajuda summary{cursor:pointer;font-weight:600;padding:4px 0}
 .ajuda[open] summary{margin-bottom:10px}
 .rot{display:none}
+.visitas{display:flex;align-items:center;gap:8px;font-size:13px;opacity:.85}
+.visitas img{height:20px;display:block}
+.visitas[hidden]{display:none}
 /* telas pequenas: explicações menores */
 @media (max-width:760px){
  main{padding:8px;gap:10px}
@@ -88,7 +91,7 @@ p{margin:0;font-size:14px;opacity:.85}
 <div class="stage">
 <div class="cab"><canvas id="c" width="1152" height="648" tabindex="0" aria-label="Jogo de luta"></canvas></div>
 <div class="pad" aria-label="Controles na tela">
- <div class="dir"><button class="up" data-k="ArrowUp" aria-label="Pular">↑</button><button class="lf" data-k="ArrowLeft" aria-label="Esquerda">←</button><button class="dn" data-k="ArrowDown" aria-label="Baixo">↓</button><button class="rt" data-k="ArrowRight" aria-label="Direita">→</button></div>
+ <div class="dir"><button class="ul" data-k="ArrowUp ArrowLeft" aria-label="Pular para a esquerda">↖</button><button class="up" data-k="ArrowUp" aria-label="Pular">↑</button><button class="ur" data-k="ArrowUp ArrowRight" aria-label="Pular para a direita">↗</button><button class="lf" data-k="ArrowLeft" aria-label="Esquerda">←</button><button class="dn" data-k="ArrowDown" aria-label="Baixo">↓</button><button class="rt" data-k="ArrowRight" aria-label="Direita">→</button></div>
  <div class="sys"><button data-sys="pause" aria-label="Pausar">⏸ Pausa</button><button data-sys="enter" aria-label="Enter">Enter</button><button data-sys="full" aria-label="Tela cheia">⛶ Tela cheia</button></div>
  <div class="act"><button data-k="KeyA" aria-label="Soco">A<small>soco</small></button><button data-k="KeyS" aria-label="Direto">S<small>direto</small></button><button class="k" data-k="KeyD" aria-label="Chute">D<small>chute</small></button></div>
 </div>
@@ -96,12 +99,13 @@ p{margin:0;font-size:14px;opacity:.85}
 <p class="rot">📱 Deite o celular para a luta ocupar a tela toda.</p>
 <details class="ajuda" id="ajuda"><summary>Como jogar</summary>
 <section class="ctl">
- <div><b>Mover</b><kbd>←</kbd> <kbd>→</kbd> andar · <kbd>↑</kbd> pular</div>
+ <div><b>Mover</b><kbd>←</kbd> <kbd>→</kbd> andar · <kbd>↑</kbd> pular · <kbd>↖</kbd> <kbd>↗</kbd> (ou <kbd>↑</kbd> + <kbd>←</kbd>/<kbd>→</kbd>) pular para trás / para frente</div>
  <div><b>Golpes</b><kbd>A</kbd> jab · <kbd>A</kbd> <kbd>A</kbd> jab + direto · <kbd>S</kbd> direto (mão de trás) · <kbd>D</kbd> chute · chute no ar = voadora</div>
  <div><b>Técnicas</b>Segure <b style="display:inline">para trás</b> para defender · <kbd>↓</kbd> <kbd>→</kbd> + <kbd>D</kbd> = chute giratório · JÚLIO, JÚLIO 2 e JÚLIO 3: <kbd>←</kbd> + <kbd>D</kbd> = passo de costas + coice · <kbd>→</kbd> <kbd>→</kbd> + <kbd>D</kbd> = sobre passo + chute</div>
  <div><b>Extras</b><kbd>P</kbd> ou ⏸ pausa · <kbd>Enter</kbd> confirma / continua · <kbd>Esc</kbd> volta à seleção · <kbd>1</kbd> mostra hitboxes</div>
 </section>
 </details>
+<div class="visitas" id="visitas" hidden>Visitas ao jogo: <img id="hits" alt="contador de visitas" referrerpolicy="no-referrer"></div>
 <p>No celular, use os botões na tela. No computador, clique uma vez no jogo para ativar o teclado.</p>
 </main>
 <script>
@@ -594,6 +598,11 @@ addEventListener('keydown',e=>{
 });
 addEventListener('keyup',e=>keys.delete(e.code));
 let focused=document.hasFocus(),paused=false;
+if(location.hostname.endsWith('github.io')){   // contador de visitas (hits.sh) só no site publicado
+ const im=document.getElementById('hits'),box=document.getElementById('visitas');
+ im.onload=()=>box.hidden=false;im.onerror=()=>box.remove();
+ im.src='https://hits.sh/piikeda.github.io/dojang-fighters.svg?view=today-total&label=visitas';
+}
 const togglePause=()=>{if(mode==='fight')paused=!paused;};
 try{if(!matchMedia('(pointer:coarse)').matches)document.getElementById('ajuda').open=true;}catch(_){}
 document.querySelectorAll('[data-sys]').forEach(b=>b.addEventListener('pointerdown',e=>{
@@ -609,8 +618,8 @@ addEventListener('blur',()=>{focused=false;keys.clear();});
 cv.addEventListener('pointerdown',()=>{window.focus();cv.focus();focused=true;});
 // botões na tela (toque e mouse) usam as mesmas teclas
 document.querySelectorAll('[data-k]').forEach(b=>{
- const code=b.dataset.k,off=()=>{keys.delete(code);b.classList.remove('on');};
- b.addEventListener('pointerdown',e=>{e.preventDefault();focused=true;try{b.setPointerCapture(e.pointerId);}catch(_){}keys.add(code);taps.add(code);b.classList.add('on');});
+ const codes=b.dataset.k.split(' '),off=()=>{codes.forEach(c=>keys.delete(c));b.classList.remove('on');};
+ b.addEventListener('pointerdown',e=>{e.preventDefault();focused=true;try{b.setPointerCapture(e.pointerId);}catch(_){}codes.forEach(c=>{keys.add(c);taps.add(c);});b.classList.add('on');});
  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,off));
  b.addEventListener('contextmenu',e=>e.preventDefault());
 });
