@@ -10,7 +10,11 @@ Jogo de luta 2D de taekwondo para navegador, em HTML + JavaScript puro (canvas),
 - ← → andar · ↑ pular · segurar para trás = defesa
 - A soco (A A = jab + direto) · S direto · D chute
 - ↓ → + D e ← + D: golpes especiais · → → + D: sobre passo + chute
+- P ou botão Pausa pausa · Enter confirma / continua
 - Esc volta uma tela · 1 mostra as hitboxes
+
+## No celular
+Deite o celular: a luta ocupa a tela toda e os botões ficam por cima. O botão "Tela cheia" esconde a barra do navegador.
 
 ## Arquivos
 - `index.html` — todo o código do jogo
