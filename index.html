@@ -544,12 +544,14 @@ function drawSelect(t){
  if(cen.ready){ctx.imageSmoothingEnabled=true;ctx.drawImage(cen,0,0,W,H);ctx.imageSmoothingEnabled=false;}else ctx.drawImage(bg,0,0);R(0,0,W,H,'#0c1630c8');
  txt('DOJANG FIGHTERS',W/2,24,14,'#f2c230');
  txt((sel.step?'ESCOLHA SEU OPONENTE':'ESCOLHA SEU LUTADOR')+' · MODO '+MODOS[sel.modo].nome,W/2,42,6,sel.step?'#ff8a80':'#cfd8ea');
- const L=sel.list,n=L.length,cols=Math.ceil(n/2),cw=44,ch=70,gap=4;
+ const L=sel.list,n=L.length,rows=n>12?3:2,cols=Math.ceil(n/rows),k=rows===3?0.66:1,cw=Math.round(44*k),ch=Math.round(70*k),gap=rows===3?3:4,ch0=rows===3?2:4;
  for(let p=0;p<n;p++){
-  const i=L[p],r=p<cols?0:1,k=r?p-cols:p,rn=r?n-cols:cols,xr=(W-(rn*cw+(rn-1)*gap))/2,x=xr+k*(cw+gap),y=48+r*(ch+4);
-  R(x,y,cw,ch,'#16244a');R(x,y+56,cw,14,'#0e1833');
-  drawSprite({x:x+cw/2,y:y+56,facing:x+cw/2<W/2?1:-1,ci:i,st:'idle',anim:t},null,y+56,false);   // metade olha para dentro
-  txt(ROSTER[i].nome,x+cw/2,y+63,5,'#fff');
+  const i=L[p],r=Math.floor(p/cols),q=p%cols,rn=Math.min(cols,n-r*cols),xr=(W-(rn*cw+(rn-1)*gap))/2,x=xr+q*(cw+gap),y=48+r*(ch+ch0),fy=y+Math.round(56*k);
+  R(x,y,cw,ch,'#16244a');R(x,fy,cw,ch-(fy-y),'#0e1833');
+  ctx.save();ctx.translate(x+cw/2,fy);ctx.scale(k,k);
+  drawSprite({x:0,y:0,facing:x+cw/2<W/2?1:-1,ci:i,st:'idle',anim:t},null,0,false);   // metade olha para dentro
+  ctx.restore();
+  txt(ROSTER[i].nome,x+cw/2,fy+Math.round(7*k),k<1?4:5,'#fff');
   if(sel.c[0]===i){ctx.strokeStyle='#f2c230';ctx.lineWidth=2;ctx.strokeRect(x+1,y+1,cw-2,ch-2);txt(sel.step?'VOCÊ ✓':'VOCÊ',x+3,y+7,4,'#f2c230','left');}
   if(sel.step&&sel.c[1]===i){ctx.strokeStyle='#e8453c';ctx.lineWidth=2;ctx.strokeRect(x+4,y+4,cw-8,ch-8);txt('CPU',x+cw-3,y+(sel.c[0]===i?14:7),4,'#ff8a80','right');}
  }
