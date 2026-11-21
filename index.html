@@ -443,7 +443,7 @@ function drawSprite(f,o,gy,refl){
 function imgPose(f,o,air,c){
  const has=k=>!!c.fr[k];   // sem a pose: simula com inclinação, avanço e escala
  let fr='idle',dx=0,dy=0,rot=0,sx=1,sy=1,flip=false;const a=f.anim||0;
- if(f.st==='ko'){rot=air?-0.6:-Math.PI/2;}
+ if(f.st==='ko'){rot=air?-0.6:-Math.PI/2;if(!air)sx=0.42;}
  else if(f.st==='stun'&&!f.bs){rot=-0.2;dx=-3;}
  else if((f.st==='stun'&&f.bs)||(f.block&&o&&o.st==='atk')){if(has('guarda')){fr='guarda';dx=-1;}else{rot=-0.07;dx=-2;sx=0.95;}}
  else if(f.st==='atk'){
@@ -469,8 +469,8 @@ function imgPose(f,o,air,c){
 function drawImgFighter(f,o,gy,refl,c){
  const air=f.y<gy-0.01,P=imgPose(f,o,air,c),F=c.fr[P.fr]||c.fr.idle,HW=56*F.sc*(c.tam||1),s=HW/F.im.height,w=F.im.width*s,ax=F.ax*s;
  const fc=P.flip?-f.facing:f.facing,up=gy-f.y,ko=f.st==='ko'&&!air,sw=ko?44:Math.max(10,30-up/2);
- const draw=(img,al)=>{ctx.save();ctx.globalAlpha=al;ctx.translate(f.x+P.dx*f.facing,f.y+P.dy-(ko?ax:0));ctx.scale(fc,1);ctx.rotate(P.rot);ctx.scale(P.sx,P.sy);ctx.drawImage(img,-ax,-HW,w,HW);ctx.restore();};
- ctx.fillStyle=`rgba(6,16,42,${Math.max(0.2,0.55-up/120)})`;ctx.beginPath();ctx.ellipse(f.x-(ko?28*fc:0),gy+0.5,sw/2,2.6,0,0,7);ctx.fill();
+ const draw=(img,al)=>{ctx.save();ctx.globalAlpha=al;ctx.translate(f.x+P.dx*f.facing,f.y+P.dy-(ko?ax*P.sx:0));ctx.scale(fc,1);ctx.rotate(P.rot);ctx.scale(P.sx,P.sy);ctx.drawImage(img,-ax,-HW,w,HW);ctx.restore();};
+ ctx.fillStyle=`rgba(6,16,42,${Math.max(0.2,0.55-up/120)})`;ctx.beginPath();ctx.ellipse(f.x-(ko?HW*0.45*fc:0),gy+0.5,sw/2,2.6,0,0,7);ctx.fill();
  ctx.imageSmoothingEnabled=true;
  if(refl&&up<4&&!ko){ctx.save();ctx.translate(0,2*gy);ctx.scale(1,-1);draw(F.im,0.07);ctx.restore();}
  draw(F.im,1);
