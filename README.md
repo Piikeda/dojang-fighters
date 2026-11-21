@@ -8,7 +8,7 @@ Jogo de luta 2D de taekwondo para navegador, em HTML + JavaScript puro (canvas),
 
 ## Controles
 - ← → andar · ↑ pular · ↖ ↗ (ou ↑ + ←/→) pular para trás / para frente · segurar para trás = defesa
-- A soco (A A = jab + direto) · S direto · D chute
+- A soco (A A = jab + direto) · S direto · D chute · F chute especial / giro
 - ↓ → + D e ← + D: golpes especiais · → → + D: sobre passo + chute
 - P ou botão Pausa pausa · Enter confirma / continua
 - Esc volta uma tela · 1 mostra as hitboxes

@@ -95,14 +95,14 @@ p{margin:0;font-size:14px;opacity:.85}
 <div class="pad" aria-label="Controles na tela">
  <div class="dir"><button class="ul" data-k="ArrowUp ArrowLeft" aria-label="Pular para a esquerda">↖</button><button class="up" data-k="ArrowUp" aria-label="Pular">↑</button><button class="ur" data-k="ArrowUp ArrowRight" aria-label="Pular para a direita">↗</button><button class="lf" data-k="ArrowLeft" aria-label="Esquerda">←</button><button class="dn" data-k="ArrowDown" aria-label="Baixo">↓</button><button class="rt" data-k="ArrowRight" aria-label="Direita">→</button></div>
  <div class="sys"><button data-sys="pause" aria-label="Pausar">⏸ Pausa</button><button data-sys="enter" aria-label="Enter">Enter</button><button data-sys="full" aria-label="Tela cheia">⛶ Tela cheia</button></div>
- <div class="act"><button data-k="KeyA" aria-label="Soco">A<small>soco</small></button><button data-k="KeyS" aria-label="Direto">S<small>direto</small></button><button class="k" data-k="KeyD" aria-label="Chute">D<small>chute</small></button></div>
+ <div class="act"><button data-k="KeyA" aria-label="Soco">A<small>soco</small></button><button data-k="KeyS" aria-label="Direto">S<small>direto</small></button><button class="k" data-k="KeyD" aria-label="Chute">D<small>chute</small></button><button class="k" data-k="KeyF" aria-label="Chute especial">F<small>giro</small></button></div>
 </div>
 </div>
 <p class="rot">📱 Deite o celular para a luta ocupar a tela toda.</p>
 <details class="ajuda" id="ajuda"><summary>Como jogar</summary>
 <section class="ctl">
  <div><b>Mover</b><kbd>←</kbd> <kbd>→</kbd> andar · <kbd>↑</kbd> pular · <kbd>↖</kbd> <kbd>↗</kbd> (ou <kbd>↑</kbd> + <kbd>←</kbd>/<kbd>→</kbd>) pular para trás / para frente</div>
- <div><b>Golpes</b><kbd>A</kbd> jab · <kbd>A</kbd> <kbd>A</kbd> jab + direto · <kbd>S</kbd> direto (mão de trás) · <kbd>D</kbd> chute · chute no ar = voadora</div>
+ <div><b>Golpes</b><kbd>A</kbd> jab · <kbd>A</kbd> <kbd>A</kbd> jab + direto · <kbd>S</kbd> direto (mão de trás) · <kbd>D</kbd> chute · <kbd>F</kbd> chute especial / giro · chute no ar = voadora</div>
  <div><b>Técnicas</b>Segure <b style="display:inline">para trás</b> para defender · <kbd>↓</kbd> <kbd>→</kbd> + <kbd>D</kbd> = chute giratório · JÚLIO, JÚLIO 2 e JÚLIO 3: <kbd>←</kbd> + <kbd>D</kbd> = passo de costas + coice · <kbd>→</kbd> <kbd>→</kbd> + <kbd>D</kbd> = sobre passo + chute</div>
  <div><b>Extras</b><kbd>P</kbd> ou ⏸ pausa · <kbd>Enter</kbd> confirma / continua · <kbd>Esc</kbd> volta à seleção · <kbd>1</kbd> mostra hitboxes</div>
 </section>
@@ -187,7 +187,7 @@ function update(s,f,o,inp){
  if(inp.d)f.downT=s.frame;
  if(fwd&&s.frame-f.downT<=14)f.qcfT=s.frame;            // buffer: ↓ depois →
  if(fwd&&!f.pFwd){if(s.frame-(f.fwdTap||-99)<=16)f.dashT=s.frame;f.fwdTap=s.frame;}f.pFwd=fwd;   // → →
- const lp=inp.p&&!f.pLP,lk=inp.k&&!f.pLK,lq=inp.q&&!f.pLQ;f.pLP=!!inp.p;f.pLK=!!inp.k;f.pLQ=!!inp.q;
+ const lp=inp.p&&!f.pLP,lk=inp.k&&!f.pLK,lq=inp.q&&!f.pLQ,lf=inp.f&&!f.pLF;f.pLP=!!inp.p;f.pLK=!!inp.k;f.pLQ=!!inp.q;f.pLF=!!inp.f;
  f.block=false;
  if(f.st==='ko'){f.vx*=0.92;}
  else if(f.st==='stun'){if(f.bs)f.block=back;if(--f.stun<=0&&!air){f.st='idle';f.t=0;}if(!air)f.vx*=0.85;}
@@ -199,9 +199,9 @@ function update(s,f,o,inp){
   else if(f.t>=m.startup+m.active+m.recovery){f.st=air?'jump':'idle';f.t=0;}
  } else {
   if(!air&&o.x!==f.x)f.facing=o.x>f.x?1:-1;
-  if(lk||lp||(lq&&!air)){
+  if(lk||lp||((lq||lf)&&!air)){
    f.st='atk';f.t=0;f.hasHit=false;
-   f.move=(lq&&!lk&&!lp)?'direto':air?'aereo':(lk&&s.frame-f.qcfT<=10)?(ROSTER[f.ci].spr&&ROSTER[f.ci].spr.pulo?'salto':'giro'):(lk&&s.frame-(f.dashT||-99)<=20)?'lateral':(lk&&fwd&&ROSTER[f.ci].fwdKick)?'lateral':(lk&&back&&ROSTER[f.ci].spr&&ROSTER[f.ci].spr.passo)?'passo':lk?(ROSTER[f.ci].dSpin?'giroD':'chute'):ROSTER[f.ci].aKick?'lateralA':'soco';
+   f.move=(lf&&!lk&&!lp)?(ROSTER[f.ci].spr&&ROSTER[f.ci].spr.pulo?'salto':'giro'):(lq&&!lk&&!lp)?'direto':air?'aereo':(lk&&s.frame-f.qcfT<=10)?(ROSTER[f.ci].spr&&ROSTER[f.ci].spr.pulo?'salto':'giro'):(lk&&s.frame-(f.dashT||-99)<=20)?'lateral':(lk&&fwd&&ROSTER[f.ci].fwdKick)?'lateral':(lk&&back&&ROSTER[f.ci].spr&&ROSTER[f.ci].spr.passo)?'passo':lk?(ROSTER[f.ci].dSpin?'giroD':'chute'):ROSTER[f.ci].aKick?'lateralA':'soco';
   } else if(!air){
    if(inp.u){f.vy=-6.2;f.vx=(fwd?2:back?-2:0)*f.facing;f.st='jump';f.t=0;}
    else{
@@ -644,7 +644,7 @@ document.querySelectorAll('[data-k]').forEach(b=>{
  b.addEventListener('contextmenu',e=>e.preventDefault());
 });
 const k=c=>keys.has(c)?1:0;
-const readP1=()=>({l:k('ArrowLeft'),r:k('ArrowRight'),u:k('ArrowUp'),d:k('ArrowDown'),p:k('KeyA'),k:k('KeyD'),q:k('KeyS')});
+const readP1=()=>({l:k('ArrowLeft'),r:k('ArrowRight'),u:k('ArrowUp'),d:k('ArrowDown'),p:k('KeyA'),k:k('KeyD'),q:k('KeyS'),f:k('KeyF')});
 
 function tick(){
  if(mode==='select'){
