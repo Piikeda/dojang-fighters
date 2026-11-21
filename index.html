@@ -526,7 +526,7 @@ function drawModes(t){
  txt('DOJANG FIGHTERS',W/2,22,14,'#f2c230');
  txt('ESCOLHA O MODO',W/2,42,7,'#cfd8ea');
  const bw=112,bh=118,gap=8,x0=(W-(3*bw+2*gap))/2,y=54;
- const amostra=[[0,7],[10,12],[0,10]];
+ const porNome=n=>ROSTER.findIndex(c=>c.nome===n),amostra=[['TIGRE','JÚLIO'],['IGOR','RAUL 2'],['TIGRE','IGOR']].map((ns,m)=>{const v=ns.map(porNome).filter(i=>i>=0&&MODOS[m].f(ROSTER[i]));const l=listaModo(m);while(v.length<2&&l.length)v.push(l[v.length]);return v;});
  MODOS.forEach((m,i)=>{
   const x=x0+i*(bw+gap),on=sel.modo===i;
   R(x-3,y-3,bw+6,bh+6,on?'#f2c230':'#16244a');R(x,y,bw,bh,'#16244a');R(x,y+84,bw,bh-84,'#0e1833');
