@@ -161,7 +161,7 @@ for(const c of ROSTER)if(c.spr){   // poses em imagem + versão branca de cada u
   im.src=src;
  }
 }
-const CENS=[['QUADRA','cenario.webp'],['SALA','cenario2.webp']].map(([nome,src])=>{const im=new Image();im.onload=()=>im.ready=true;im.src=src;return{nome,im};});
+const CENS=[['QUADRA','cenario.webp'],['SALA','cenario2.webp'],['ACADEMIA','cenario3.webp']].map(([nome,src])=>{const im=new Image();im.onload=()=>im.ready=true;im.src=src;return{nome,im};});
 let cen=CENS[0].im;
 const NONE={l:0,r:0,u:0,d:0,p:0,k:0,q:0};
 
@@ -546,7 +546,7 @@ function drawSelect(t){
 function drawStage(t){
  R(0,0,W,H,'#0c1630');
  txt('ESCOLHA O CENÁRIO',W/2,22,10,'#f2c230');
- const tw=150,th=84,gap=16,x0=(W-(CENS.length*tw+(CENS.length-1)*gap))/2,y=48;
+ const gap=10,tw=Math.min(150,(W-24-(CENS.length-1)*gap)/CENS.length),th=tw*9/16,x0=(W-(CENS.length*tw+(CENS.length-1)*gap))/2,y=48;
  CENS.forEach((c,i)=>{
   const x=x0+i*(tw+gap),on=sel.cen===i;
   R(x-3,y-3,tw+6,th+6,on?'#f2c230':'#16244a');
