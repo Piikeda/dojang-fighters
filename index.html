@@ -184,7 +184,7 @@ const ROSTER=[
  {nome:'IKEDA 3',real:true,guardaTras:true,semGiro:true,fwdKick:true,giroPose:['junta2','chute','junta'],hit:{soco:{x:11,y:-51,w:22,h:16},direto:{x:9,y:-52,w:22,h:16},chute:{x:18,y:-60,w:22,h:16},lateral:{x:18,y:-60,w:22,h:16},giro:{x:18,y:-60,w:22,h:16},passo:{x:18,y:-60,w:22,h:16},aereo:{x:8,y:-36,w:26,h:28}},spr:{idle:['ikeda3-idle.webp',84.0,1.0],anda:['ikeda3-anda.webp',73.5,0.996],anda2:['ikeda3-idle2.webp',87.2,1.0],ar:['ikeda3-junta2.webp',30.5,1.004],soco:['ikeda3-soco.webp',77.2,0.996],direto:['ikeda3-direto.webp',83.0,1.008],guarda:['ikeda3-guarda.webp',87.5,1.004],junta:['ikeda3-junta.webp',27.0,1.004],chute:['ikeda3-alto.webp',37.0,0.992],junta2:['ikeda3-junta2.webp',30.5,1.004],costas:['ikeda3-junta2.webp',30.5,1.004],passo:['ikeda3-alto.webp',37.0,0.992]},faixa:'#151515',gola:true,pele:'#c98d63',cabelo:'#141010',estilo:'coque'},
  {nome:'GUITAR-MAN',real:true,hit:{soco:{x:11,y:-50,w:22,h:13},direto:{x:11,y:-50,w:22,h:13},chute:{x:14,y:-46,w:22,h:13},lateral:{x:20,y:-47,w:22,h:13},giro:{x:14,y:-59,w:22,h:13},passo:{x:14,y:-46,w:22,h:13},aereo:{x:8,y:-36,w:26,h:28}},spr:{idle:['guitar-idle.webp',69.8,1.0],anda:['guitar-anda.webp',79.2,0.971],anda2:['guitar-idle2.webp',77.2,0.992],soco:['guitar-soco.webp',97.8,0.979],guarda:['guitar-guarda.webp',78.5,0.988],chute:['guitar-chute.webp',45.5,0.988],meio:['guitar-meio.webp',58.5,0.988],alto:['guitar-alto.webp',70.5,1.004]},faixa:'#d8d020',pele:'#e0b48e',cabelo:'#1a120d',estilo:'coque'},
  {nome:'GUILHERMINO',tam:0.85,real:true,hit:{soco:{x:10,y:-51,w:22,h:13},direto:{x:10,y:-50,w:22,h:13},chute:{x:12,y:-49,w:22,h:13},lateral:{x:17,y:-46,w:22,h:13},giro:{x:9,y:-58,w:22,h:13},passo:{x:12,y:-49,w:22,h:13},aereo:{x:8,y:-36,w:26,h:28}},spr:{idle:['guilhermino-idle.webp',72.2,1.0],anda:['guilhermino-anda.webp',82.8,0.958],anda2:['guilhermino-pe.webp',60.8,0.967],soco:['guilhermino-soco.webp',75.8,0.988],direto:['guilhermino-direto.webp',78.0,0.975],junta:['guilhermino-junta.webp',41.0,0.971],chute:['guilhermino-chute.webp',61.5,0.979],meio:['guilhermino-meio.webp',56.0,0.958],alto:['guilhermino-alto.webp',82.0,0.958],guarda:['guilhermino-guarda.webp',79.5,0.988],leva:['guilhermino-leva.webp',85.0,0.863],ar:['guilhermino-ar.webp',55.8,0.825]},faixa:'#f4f4f4',pele:'#d9a77e',cabelo:'#1a120d',estilo:'curto'},
- {nome:'BOB MISTERIOSO',oculto:true,saco:true,real:true,tam:0.95,spr:{idle:['bob.webp',46.5,1.0]},faixa:'#151515',pele:'#222',cabelo:'#111',estilo:'curto'},
+ {nome:'BOB MISTERIOSO',oculto:true,saco:true,real:true,tam:0.95,spr:{idle:['bob.webp',79.5,1.0]},faixa:'#151515',pele:'#222',cabelo:'#111',estilo:'curto'},
  {nome:'BOB',oculto:true,saco:true,tam:0.95,spr:{idle:['bob-animado.webp',42.0,1.0]},faixa:'#151515',pele:'#222',cabelo:'#111',estilo:'curto'},
 ];
 const LEG=6;
@@ -494,7 +494,7 @@ function drawSprite(f,o,gy,refl){
 }
 // lutador em imagens: escolhe a pose e completa com inclinação, avanço e escala
 function imgPose(f,o,air,c){
- if(c.saco){const k=f.st==='stun'?f.t:999,dir=o&&o.x<f.x?1:-1;return{fr:'idle',dx:0,dy:0,rot:k<90?dir*f.facing*Math.sin(k*0.3)*0.38*Math.exp(-k/26):0,sx:1,sy:1,flip:false};}
+ if(c.saco){const k=f.st==='stun'?f.t:999,dir=o&&o.x<f.x?1:-1;return{fr:'idle',dx:0,dy:0,rot:k<90?dir*Math.sin(k*0.3)*0.38*Math.exp(-k/26):0,sx:1,sy:1,flip:f.facing<0};}   // não espelha (logo legível)
  const has=k=>!!c.fr[k];   // sem a pose: simula com inclinação, avanço e escala
  let fr='idle',dx=0,dy=0,rot=0,sx=1,sy=1,flip=false;const a=f.anim||0;
  if(f.st==='ko'){rot=air?-0.6:-Math.PI/2;}
